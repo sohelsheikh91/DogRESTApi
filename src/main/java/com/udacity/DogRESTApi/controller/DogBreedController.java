@@ -1,38 +1,64 @@
 package com.udacity.DogRESTApi.controller;
 
 import com.udacity.DogRESTApi.service.dog_breedServiceImpl;
-import com.udacity.DogRESTApi.web.dog_breed;
+import com.udacity.DogRESTApi.web.Dog_breed;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@ApiResponses(value = {
+        @ApiResponse(code=400, message = "This is a bad request, please follow the API documentation for the proper request format."),
+        @ApiResponse(code=401, message = "Due to security constraints, your access request cannot be authorized. "),
+        @ApiResponse(code=500, message = "The server is down. Please make sure that the Location microservice is running."),
+        @ApiResponse(code=404, message = "Data Not found for this ID")
+})
 public class DogBreedController {
     @Autowired
-    dog_breedServiceImpl Impl;
+    dog_breedServiceImpl impl;
 
-    @GetMapping("/dogBreed")
-    public ResponseEntity<List<dog_breed>> getAllLocations(){
-    List<dog_breed> list = Impl.dog_breedservice();
-    return new ResponseEntity<List<dog_breed>>(list, HttpStatus.OK);
+    @GetMapping(value="/dogBreed")
+    public ResponseEntity<List<Dog_breed>> getAllBreeds(){
+    List<Dog_breed> list = impl.dog_breedservice();
+    return new ResponseEntity<List<Dog_breed>>(list, HttpStatus.OK);
     }
-    @GetMapping("/dogBreedById/{id}")
-    public ResponseEntity<String> dog_breedByID(@PathVariable(value = "id") Long id){
-        String list = Impl.dog_breedByID(id);
-        return new ResponseEntity<String>(list, HttpStatus.OK);
+    @GetMapping("/dogBreed/{id}")
+    public ResponseEntity<List<Dog_breed>> dogBreedByID(@PathVariable(value = "id") Long id){
+        List<Dog_breed> list = impl.dog_breedByID(id);
+        return new ResponseEntity<List<Dog_breed>>(list, HttpStatus.OK);
     }
-    @GetMapping("/dogBreedByName/{name}")
-    public ResponseEntity<List<String>> dog_breedByID(@PathVariable(value = "name") String str){
-        List<String> list = Impl.dog_breedByName(str);
-        return new ResponseEntity<List<String>>(list, HttpStatus.OK);
+//    @RequestMapping(method = RequestMethod.GET,value = "/dogBreed")
+    @GetMapping(value ="/dogBreed",params = {"name"})
+    public ResponseEntity<Dog_breed> dogBreedByName(@RequestParam(name = "name", required = true) String name){
+        Dog_breed list = impl.dog_breedByName(name);
+        return new ResponseEntity<Dog_breed>(list, HttpStatus.OK);
     }
 
+//    @RequestMapping(method = RequestMethod.POST,value = "/dogBreed")
+    @PostMapping("/dogBreed")
+    public String setDogBreed(@RequestBody Dog_breed dogBreed){
+        impl.createBreed(dogBreed);
+        return "Dog Added";
+    }
 
+//    @RequestMapping(method = RequestMethod.PUT,value = "/dogBreed")
+    @PutMapping("/dogBreed")
+    public String updateDogBreed(@RequestBody Dog_breed dogBreed){
+        impl.createBreed(dogBreed);
+        return "Dog Updated";
+    }
+
+//    @RequestMapping(method = RequestMethod.DELETE,value = "/dogBreed/{id}")
+    @DeleteMapping("/dogBreed/{id}")
+    public String setDogBreed(@PathVariable Long id){
+        impl.deleteBreed(id);
+        return "Dog Deleted";
+    }
 
 }

@@ -3,9 +3,9 @@ package com.udacity.DogRESTApi.web;
 import javax.persistence.*;
 
 @Entity
-public class dog_breed {
+public class Dog_breed {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
     private String breed;
     private String name;
@@ -18,13 +18,13 @@ public class dog_breed {
         this.name = name;
     }
 
-    public dog_breed(Long id, String breed, String name) {
+    public Dog_breed(Long id, String breed, String name) {
         this.id = id;
         this.breed = breed;
         this.name = name;
     }
 
-    public dog_breed() {
+    public Dog_breed() {
     }
 
     public Long getId() {
